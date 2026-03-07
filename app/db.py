@@ -7,6 +7,7 @@ from sqlalchemy.orm import DeclarativeBase
 env_path = Path(__file__).parent.parent / ".env"
 
 class Settings(BaseSettings):
+
     DB_HOST: str
     DB_PORT: int
     DB_USER: str
@@ -42,12 +43,12 @@ async def get_db() -> AsyncSession:
         yield session
 
 
+
 async def create_tables() -> None:
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
 
 
-#async def drop_tables():
-#    async with engine.begin() as conn:
-#        await conn.execute(text("DROP SCHEMA public CASCADE"))
-#        await conn.execute(text("CREATE SCHEMA public"))
+async def drop_tables():
+    async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.drop_all)
